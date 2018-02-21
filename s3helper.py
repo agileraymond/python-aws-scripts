@@ -1,9 +1,21 @@
 import boto3
+from EmailController import EmailController
 
-session = boto3.Session(profile_name='python-scripts')
-s3 = session.client('s3')
-
-filename = 'test.txt'
+filename = 'testemails.csv'
 bucket_name = 'mysql-emails'
 
-# read csv file from mysql-emails bucket
+file = open(filename, 'r')
+emailer = EmailController()
+
+fromAddress = ''
+toAddress = ''
+subject = 'updates from solutionsByRaymond.com'
+emailBody = "<p>Hi, I'm Raymond, founder of solutionsByRaymond.com.</p>"
+
+for line in file:
+    response = emailer.SendEmail(fromAddress, toAddress, subject, emailBody)
+    if (response['ResponseMetadata']['HTTPStatusCode'] == 200):
+        print('success')
+    else:
+        print('failed')
+    
